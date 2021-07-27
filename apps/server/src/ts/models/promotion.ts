@@ -13,6 +13,10 @@ export interface IPromotion {
   userGroupName: PromotionUserGroupNameKeys;
 }
 
+export interface IPromotionResponse extends IPromotion {
+  id: string;
+}
+
 export interface IPromotionDocument extends IPromotion, Document {}
 
 export interface IPromotionModel extends Model<IPromotionDocument> {}

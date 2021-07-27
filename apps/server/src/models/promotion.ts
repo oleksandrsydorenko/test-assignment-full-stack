@@ -5,8 +5,8 @@ const PromotionSchema: Schema = new Schema(
   {
     name: String,
     type: String,
-    startDate: Date,
-    endDate: Date,
+    startDate: Number,
+    endDate: Number,
     userGroupName: String,
   },
   {

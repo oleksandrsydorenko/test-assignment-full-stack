@@ -13,21 +13,18 @@ const Home = () => {
     total: 0,
   });
 
-  const onError = (err: Error) => {
+  const onRequestError = (err: Error) => {
     log.error(err);
     setLoading(false);
   };
 
-  const onSuccess = (res: any) => {
+  const onRequestSuccess = (res: any) => {
     setData(prevData => ({
       ...prevData,
       ...res,
       promotions: [...prevData.promotions, ...res.promotions],
     }));
-
-    if (!data.page) {
-      setLoading(false);
-    }
+    setLoading(false);
   };
 
   const generateData = useCallback(() => {
@@ -37,8 +34,8 @@ const Home = () => {
         count: PARAMS_DEFAULT.PROMOTIONS_COUNT,
         limit: PARAMS_DEFAULT.PROMOTIONS_LIMIT,
       },
-      onSuccess,
-      onError,
+      onSuccess: onRequestSuccess,
+      onError: onRequestError,
     });
   }, [data]);
 
@@ -48,9 +45,25 @@ const Home = () => {
         page,
         limit: PARAMS_DEFAULT.PROMOTIONS_LIMIT,
       },
-      onError,
-      onSuccess,
+      onSuccess: onRequestSuccess,
+      onError: onRequestError,
     });
+  }, []);
+
+  const editItem = useCallback(({ dataToUpdate, event, id, callback }) => {
+    log.info(dataToUpdate);
+    log.info(id);
+    callback(event);
+  }, []);
+
+  const deleteItem = useCallback(({ event, id, callback }) => {
+    log.info(id);
+    callback(event);
+  }, []);
+
+  const duplicateItem = useCallback(({ event, id, callback }) => {
+    log.info(id);
+    callback(event);
   }, []);
 
   useEffect(() => {
@@ -62,6 +75,9 @@ const Home = () => {
       data={data.promotions}
       page={data.page}
       total={data.total}
+      editItem={editItem}
+      deleteItem={deleteItem}
+      duplicateItem={duplicateItem}
       fetchMore={fetchData}
     />
   ) : (

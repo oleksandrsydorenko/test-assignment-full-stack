@@ -1,17 +1,18 @@
 import { parentPort, workerData } from 'worker_threads';
 
 import { generatePromotions } from '../services';
+import { parseStringToNumber } from '../utils';
 import { PARAMS_DEFAULT } from '../constants';
 
-const chunkSize = workerData.chunkSize || PARAMS_DEFAULT.PROMOTIONS_CHUNK_SIZE;
-const chunksNumber = Math.ceil(workerData.count / chunkSize);
-const generate = (count: number) => generatePromotions(count);
+const count = parseStringToNumber(workerData.count);
+const chunkSize = workerData.chunkSize
+  ? parseStringToNumber(workerData.chunkSize)
+  : PARAMS_DEFAULT.PROMOTIONS_CHUNK_SIZE;
+const chunksNumber = Math.ceil(count / chunkSize);
 
 for (let i = 0; i < chunksNumber; i++) {
-  const count =
-    i === chunksNumber - 1 ? workerData.count % chunkSize : chunkSize;
+  const itemsNumber =
+    chunkSize * (i + 1) <= count ? chunkSize : count % chunkSize;
 
-  const promotions = generate(count);
-
-  parentPort?.postMessage(promotions);
+  parentPort?.postMessage(generatePromotions(itemsNumber));
 }

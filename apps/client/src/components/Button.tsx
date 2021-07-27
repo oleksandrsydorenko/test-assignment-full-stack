@@ -1,9 +1,11 @@
-import React, { MouseEvent } from 'react';
+import React from 'react';
 import { Button as MaterialUIButton } from '@material-ui/core';
+
+import { IEvent } from '../ts';
 
 interface IButtonProps {
   label: string;
-  onClick: (e: MouseEvent<HTMLButtonElement>) => void;
+  onClick: (event: IEvent) => void;
 }
 
 const Button = ({ label, onClick }: IButtonProps) => (

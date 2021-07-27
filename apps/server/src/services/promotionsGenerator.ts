@@ -24,7 +24,7 @@ const randomizeDate = (date: number): number =>
   Date.now() + randomizeNumber(date);
 
 const randomizeMapValue = <T>(map: T): string => {
-  const keys: string[] = Object.keys(map);
+  const keys: string[] = Object.values(map);
 
   return keys[randomizeNumber(keys.length)];
 };
