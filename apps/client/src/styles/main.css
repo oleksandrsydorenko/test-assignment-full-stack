@@ -1,0 +1,7 @@
+@import './resets/normalize.css';
+@import './resets/reset.css';
+
+#root {
+  width: 100vw;
+  height: 100vh;
+}

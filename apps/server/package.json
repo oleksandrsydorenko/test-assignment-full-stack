@@ -1,0 +1,30 @@
+{
+  "name": "@moon-active-promotions/server",
+  "version": "1.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "rimraf dist && cross-env NODE_ENV=production && tsc",
+    "serve": "cross-env NODE_ENV=production node dist/index.js",
+    "start": "nodemon",
+    "start:db": "docker-compose -f mongodb.yml up",
+    "stop:db": "docker-compose -f mongodb.yml down"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.13.3",
+    "unique-names-generator": "^4.6.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/mongoose": "^5.11.97",
+    "@types/node": "^16.4.2",
+    "cross-env": "^7.0.3",
+    "nodemon": "^2.0.12",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.1.0"
+  }
+}
