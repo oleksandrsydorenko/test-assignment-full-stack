@@ -1,3 +1,4 @@
 export * from './defaults';
 export * from './errors';
-export * from './types';
+export * from './promotion';
+export { default as ROUTE } from './routes';

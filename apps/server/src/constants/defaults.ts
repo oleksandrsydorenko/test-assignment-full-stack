@@ -1,6 +1,5 @@
-import { IConfigDefault } from '../ts';
+import { IConfigDefault, IParamsDefault } from '../ts';
 
-// eslint-disable-next-line import/prefer-default-export
 export const CONFIG_DEFAULT: IConfigDefault = {
   DB_HOST: 'localhost',
   DB_PROTOCOL: 'mongodb',
@@ -8,4 +7,10 @@ export const CONFIG_DEFAULT: IConfigDefault = {
   SERVER_HOST: 'localhost',
   SERVER_PORT: 8000,
   SERVER_PROTOCOL: 'http',
+};
+
+export const PARAMS_DEFAULT: IParamsDefault = {
+  PROMOTIONS_COUNT: 1000,
+  PROMOTIONS_LIMIT: 50,
+  PROMOTIONS_PAGE: 1,
 };

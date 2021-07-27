@@ -1,16 +1,16 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
+import { API_BASE } from '../constants';
 import { IHttpRequest } from '../ts';
-import { API } from '../constants';
 
-axios.defaults.baseURL = process.env.REACT_APP_BASE_API || API.BASE;
+axios.defaults.baseURL = process.env.REACT_APP_BASE_API || API_BASE;
 
 const request: IHttpRequest = async ({
-  url,
   data,
   headers,
   method,
   params,
+  url,
   onSuccess,
   onError,
 }) => {

@@ -1,2 +1,2 @@
-export { default as API } from './api';
-export * from './types';
+export * from './api';
+export * from './promotions';

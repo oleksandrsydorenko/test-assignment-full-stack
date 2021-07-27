@@ -1,4 +1,4 @@
-import { IPromotionType, IPromotionUserGroupName } from '../constants';
+import { IPromotionType, IPromotionUserGroupName } from './constants';
 
 export type PromotionTypeKeys = keyof IPromotionType;
 

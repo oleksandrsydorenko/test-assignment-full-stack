@@ -1,8 +1,7 @@
-import { IConfig } from '../ts';
-
 import baseConfig from './base';
 import expressConfig from './express';
 import mongooseConfig from './mongoose';
+import { IConfig } from '../ts';
 
 const config: IConfig = {
   base: baseConfig,

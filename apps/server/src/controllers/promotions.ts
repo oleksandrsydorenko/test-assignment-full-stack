@@ -3,16 +3,11 @@ import { Request, Response } from 'express';
 import { Worker } from 'worker_threads';
 
 import { Promotion } from '../models';
-import { log } from '../utils';
-import { ERROR_RESPONSE } from '../constants';
+import { handleInternalServerError, log } from '../utils';
+import { PARAMS_DEFAULT } from '../constants';
 
-const DEFAULT_LIMIT = 50;
-
-const handleInternalServerError = (err: Error, res: Response): void => {
-  log.error(err);
-  res.status(500).json(ERROR_RESPONSE.INTERNAL_SERVER_ERROR);
-};
-
+const calcTotalPages = (count: number, limit: number) =>
+  Math.ceil(count / limit);
 const parseParamAsNumber = (param: string): number =>
   Number.parseInt(param, 10);
 
@@ -20,8 +15,10 @@ export const getPromotions = async (req: Request, res: Response) => {
   const { limit: limitParam, page: pageParam } = req.query;
   const limit = limitParam
     ? parseParamAsNumber(limitParam as string)
-    : DEFAULT_LIMIT;
-  const page = pageParam ? parseParamAsNumber(pageParam as string) : 1;
+    : PARAMS_DEFAULT.PROMOTIONS_LIMIT;
+  const page = pageParam
+    ? parseParamAsNumber(pageParam as string)
+    : PARAMS_DEFAULT.PROMOTIONS_PAGE;
 
   try {
     const promotions = await Promotion.find()
@@ -32,8 +29,8 @@ export const getPromotions = async (req: Request, res: Response) => {
 
     res.json({
       promotions,
-      totalPages: Math.ceil(count / limit),
-      currentPage: page,
+      page,
+      total: calcTotalPages(count, limit),
     });
   } catch (err) {
     handleInternalServerError(err, res);
@@ -42,13 +39,18 @@ export const getPromotions = async (req: Request, res: Response) => {
 
 export const insertPromotions = (req: Request, res: Response) => {
   const { count: countParam, limit: limitParam } = req.body;
-  const count = parseParamAsNumber(countParam);
-  const limit = limitParam ? parseParamAsNumber(limitParam) : DEFAULT_LIMIT;
+  const count = countParam
+    ? parseParamAsNumber(countParam)
+    : PARAMS_DEFAULT.PROMOTIONS_COUNT;
+  const limit = limitParam
+    ? parseParamAsNumber(limitParam)
+    : PARAMS_DEFAULT.PROMOTIONS_LIMIT;
   const worker = new Worker(
     path.resolve(__dirname, '../workers/promotionsWorker.js'),
     {
       workerData: {
         count,
+        limit,
         aliasModule: path.resolve(__dirname, '../workers/promotionsWorker.ts'),
       },
     }
@@ -57,16 +59,16 @@ export const insertPromotions = (req: Request, res: Response) => {
   worker.on('message', async data => {
     if (!res.writableEnded) {
       res.status(200).json({
+        page: PARAMS_DEFAULT.PROMOTIONS_PAGE,
         promotions: data,
-        totalPages: Math.ceil(count / limit),
-        currentPage: 1,
+        totalPages: calcTotalPages(count, limit),
       });
     }
 
     try {
       const result = await Promotion.insertMany(data);
 
-      log.info('%d promotions were successfully stored', result.length);
+      log.info('%s promotions were successfully stored', result.length);
     } catch (err) {
       handleInternalServerError(err, res);
     }

@@ -1,8 +1,3 @@
-export interface IApiRoute {
-  PROMOTION: string;
-  PROMOTIONS: string;
-}
-
 export interface IPromotionType {
   BASIC: 'Basic';
   COMMON: 'Common';

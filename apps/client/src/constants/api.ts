@@ -1,8 +1,8 @@
-import { IApi } from '../ts';
+import { IApiRoute } from '../ts';
 
-const API: IApi = {
-  BASE: 'http://localhost:8000',
+export const API_BASE: string = 'http://localhost:8000';
+
+export const API_ROUTE: IApiRoute = {
+  PROMOTION: '/promotion',
   PROMOTIONS: '/promotions',
 };
-
-export default API;

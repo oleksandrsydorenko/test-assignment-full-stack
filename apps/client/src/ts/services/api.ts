@@ -5,7 +5,7 @@ export interface IFetchPromotions {
     onSuccess,
   }: {
     params: {
-      currentPage: number;
+      page: number;
       limit: number;
     };
     onError: (error: Error) => void;

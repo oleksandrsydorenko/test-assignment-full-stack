@@ -1,5 +1,5 @@
 import React, { MouseEvent } from 'react';
-import { Button as MaterialButton } from '@material-ui/core';
+import { Button as MaterialUIButton } from '@material-ui/core';
 
 interface IButtonProps {
   label: string;
@@ -7,9 +7,9 @@ interface IButtonProps {
 }
 
 const Button = ({ label, onClick }: IButtonProps) => (
-  <MaterialButton color="primary" variant="contained" onClick={onClick}>
+  <MaterialUIButton color="primary" variant="contained" onClick={onClick}>
     {label}
-  </MaterialButton>
+  </MaterialUIButton>
 );
 
 export default Button;

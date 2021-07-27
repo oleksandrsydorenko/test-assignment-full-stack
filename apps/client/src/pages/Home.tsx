@@ -10,14 +10,14 @@ const PROMOTIONS_LIMIT_BY_PAGE = 50;
 const Home = () => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({
-    currentPage: 0,
+    page: 0,
     promotions: [],
-    totalPages: 0,
+    total: 0,
   });
 
   const onError = (err: Error) => {
     log.error(err);
-    setLoading(true);
+    setLoading(false);
   };
 
   const onSuccess = (res: any) => {
@@ -26,7 +26,10 @@ const Home = () => {
       ...res,
       promotions: [...prevData.promotions, ...res.promotions],
     }));
-    setLoading(false);
+
+    if (!data.page) {
+      setLoading(false);
+    }
   };
 
   const generateData = useCallback(() => {
@@ -39,27 +42,30 @@ const Home = () => {
       onSuccess,
       onError,
     });
-  }, []);
+  }, [data]);
 
-  const fetchData = useCallback(
-    (currentPage = 1) =>
-      fetchPromotions({
-        params: {
-          currentPage,
-          limit: PROMOTIONS_LIMIT_BY_PAGE,
-        },
-        onError,
-        onSuccess,
-      }),
-    []
-  );
+  const fetchData = useCallback((page = 1) => {
+    fetchPromotions({
+      params: {
+        page,
+        limit: PROMOTIONS_LIMIT_BY_PAGE,
+      },
+      onError,
+      onSuccess,
+    });
+  }, []);
 
   useEffect(() => {
     fetchData();
   }, []);
 
   return data.promotions.length ? (
-    <DataTable data={data} fetchMore={fetchData} />
+    <DataTable
+      data={data.promotions}
+      page={data.page}
+      total={data.total}
+      fetchMore={fetchData}
+    />
   ) : (
     <Box
       render={() =>

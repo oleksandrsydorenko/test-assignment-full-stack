@@ -8,16 +8,14 @@ import {
   TableHead,
   TableRow,
 } from '@material-ui/core';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 
 import { IPromotion } from '../ts';
 
 interface IDataTableProps {
-  data: {
-    currentPage: number;
-    promotions: IPromotion[];
-    totalPages: number;
-  };
+  data: IPromotion[];
+  page: number;
+  total: number;
   fetchMore: (nextPage: number) => void;
 }
 
@@ -40,15 +38,15 @@ const StyledTableRow = withStyles(theme => ({
 }))(TableRow);
 
 const useStyles = makeStyles({
-  wrapper: {
+  container: {
     height: '100vh',
   },
 });
 
-const DataTable = ({ data, fetchMore }: IDataTableProps) => {
+const DataTable = ({ data, page, total, fetchMore }: IDataTableProps) => {
   const classes = useStyles();
-  const ref: any = useRef(null);
-  const tableHead = [
+  const ref = useRef<HTMLDivElement>(null);
+  const tableHeadCells = [
     'Name',
     'Type',
     'Start Date',
@@ -60,30 +58,30 @@ const DataTable = ({ data, fetchMore }: IDataTableProps) => {
   useEffect(() => {
     const onScroll = (e: any) => {
       const { offsetHeight, scrollHeight, scrollTop } = e.currentTarget;
+      const scrollPosition = scrollTop + offsetHeight;
 
-      if (
-        scrollTop + offsetHeight === scrollHeight &&
-        data.currentPage + 1 <= data.totalPages
-      ) {
-        console.log(data.totalPages);
-        console.log(data.currentPage + 1);
-        fetchMore(data.currentPage + 1);
+      if (scrollPosition === scrollHeight && page + 1 <= total) {
+        fetchMore(page + 1);
       }
     };
 
-    ref.current.addEventListener('scroll', onScroll);
+    if (ref.current) {
+      ref.current.addEventListener('scroll', onScroll);
+    }
 
     return () => {
-      ref.current.removeEventListener('scroll', onScroll);
+      if (ref.current) {
+        ref.current.removeEventListener('scroll', onScroll);
+      }
     };
-  }, []);
+  }, [page, ref, total]);
 
   return (
-    <TableContainer className={classes.wrapper} ref={ref}>
+    <TableContainer className={classes.container} ref={ref}>
       <Table>
         <TableHead>
           <TableRow>
-            {tableHead.map((item, i) => (
+            {tableHeadCells.map((item, i) => (
               <StyledTableCell key={i} align="center">
                 {item}
               </StyledTableCell>
@@ -91,8 +89,8 @@ const DataTable = ({ data, fetchMore }: IDataTableProps) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.promotions.map((row, j) => {
-            const tableBody = [
+          {data.map((row, j) => {
+            const tableBodyCells = [
               row.name,
               row.type,
               row.startDate,
@@ -103,7 +101,7 @@ const DataTable = ({ data, fetchMore }: IDataTableProps) => {
 
             return (
               <StyledTableRow key={j}>
-                {tableBody.map((item, k) => (
+                {tableBodyCells.map((item, k) => (
                   <StyledTableCell key={k}>{item}</StyledTableCell>
                 ))}
               </StyledTableRow>

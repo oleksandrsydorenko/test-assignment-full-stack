@@ -1,4 +1,4 @@
-import { API } from '../constants';
+import { API_ROUTE } from '../constants';
 import { del, get, post } from './http';
 
 import {
@@ -14,7 +14,7 @@ export const fetchPromotions: IFetchPromotions = ({
 }) =>
   get({
     params,
-    url: API.PROMOTIONS,
+    url: API_ROUTE.PROMOTIONS,
     onError,
     onSuccess,
   });
@@ -26,14 +26,14 @@ export const generatePromotions: IGeneratePromotions = ({
 }) =>
   post({
     data,
-    url: API.PROMOTIONS,
+    url: API_ROUTE.PROMOTIONS,
     onError,
     onSuccess,
   });
 
 export const deletePromotions: IDeletePromotions = ({ onError, onSuccess }) =>
   del({
-    url: API.PROMOTIONS,
+    url: API_ROUTE.PROMOTIONS,
     onError,
     onSuccess,
   });

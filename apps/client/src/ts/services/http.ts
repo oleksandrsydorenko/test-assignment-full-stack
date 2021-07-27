@@ -1,4 +1,4 @@
-import { Method, AxiosResponse } from 'axios';
+import { AxiosResponse, Method } from 'axios';
 
 export interface IHttpRequest {
   ({

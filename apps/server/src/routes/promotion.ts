@@ -5,29 +5,10 @@ import {
   updatePromotion,
   deletePromotion,
 } from '../controllers';
-
-const ENDPOINT = '/promotions/:id';
+import { ROUTE } from '../constants';
 
 export default (app: Router): void => {
-  app.post(ENDPOINT, clonePromotion);
-  app.put(ENDPOINT, updatePromotion);
-  app.delete(ENDPOINT, deletePromotion);
+  app.post(ROUTE.PROMOTION, clonePromotion);
+  app.put(ROUTE.PROMOTION, updatePromotion);
+  app.delete(ROUTE.PROMOTION, deletePromotion);
 };
-
-// import { Router } from 'express';
-
-// const ENDPOINT = '/promotions/:id';
-
-// export default (app: Router): void => {
-//   app.post(ENDPOINT, (req, res) => {
-//     res.status(200).end();
-//   });
-
-//   app.put(ENDPOINT, (req, res) => {
-//     res.status(200).end();
-//   });
-
-//   app.delete(ENDPOINT, (req, res) => {
-//     res.status(200).end();
-//   });
-// };

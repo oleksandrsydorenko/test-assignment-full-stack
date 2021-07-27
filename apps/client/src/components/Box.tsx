@@ -1,13 +1,13 @@
 import React from 'react';
-import { Box } from '@material-ui/core';
+import { Box as MaterialUIBox } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-interface IDataGeneratorProps {
+interface IBoxProps {
   render: () => JSX.Element;
 }
 
 const useStyles = makeStyles({
-  wrapper: {
+  box: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -16,10 +16,10 @@ const useStyles = makeStyles({
   },
 });
 
-const DataGenerator = ({ render }: IDataGeneratorProps) => {
+const Box = ({ render }: IBoxProps) => {
   const classes = useStyles();
 
-  return <Box className={classes.wrapper}>{render()}</Box>;
+  return <MaterialUIBox className={classes.box}>{render()}</MaterialUIBox>;
 };
 
-export default DataGenerator;
+export default Box;
