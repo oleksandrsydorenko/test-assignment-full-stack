@@ -1,15 +1,15 @@
 import { parentPort, workerData } from 'worker_threads';
 
 import { generatePromotions } from '../services';
+import { PARAMS_DEFAULT } from '../constants';
 
-const chunksNumber = Math.ceil(workerData.count / workerData.limit);
+const chunkSize = workerData.chunkSize || PARAMS_DEFAULT.PROMOTIONS_CHUNK_SIZE;
+const chunksNumber = Math.ceil(workerData.count / chunkSize);
 const generate = (count: number) => generatePromotions(count);
 
 for (let i = 0; i < chunksNumber; i++) {
   const count =
-    i === chunksNumber - 1
-      ? workerData.count % workerData.limit
-      : workerData.limit;
+    i === chunksNumber - 1 ? workerData.count % chunkSize : chunkSize;
 
   const promotions = generate(count);
 

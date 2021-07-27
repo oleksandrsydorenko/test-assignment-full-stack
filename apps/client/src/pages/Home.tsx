@@ -1,11 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { Box, DataGenerator, DataTable, Heading } from '../components';
-import { fetchPromotions, generatePromotions } from '../services/api';
+import { api } from '../services';
 import { log } from '../utils';
-
-const PROMOTIONS_COUNT = 370;
-const PROMOTIONS_LIMIT_BY_PAGE = 50;
+import { PARAMS_DEFAULT } from '../constants';
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
@@ -34,10 +32,10 @@ const Home = () => {
 
   const generateData = useCallback(() => {
     setLoading(true);
-    generatePromotions({
+    api.generatePromotions({
       data: {
-        count: PROMOTIONS_COUNT,
-        limit: PROMOTIONS_LIMIT_BY_PAGE,
+        count: PARAMS_DEFAULT.PROMOTIONS_COUNT,
+        limit: PARAMS_DEFAULT.PROMOTIONS_LIMIT,
       },
       onSuccess,
       onError,
@@ -45,10 +43,10 @@ const Home = () => {
   }, [data]);
 
   const fetchData = useCallback((page = 1) => {
-    fetchPromotions({
+    api.fetchPromotions({
       params: {
         page,
-        limit: PROMOTIONS_LIMIT_BY_PAGE,
+        limit: PARAMS_DEFAULT.PROMOTIONS_LIMIT,
       },
       onError,
       onSuccess,

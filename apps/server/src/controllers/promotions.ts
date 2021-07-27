@@ -50,7 +50,7 @@ export const insertPromotions = (req: Request, res: Response) => {
     {
       workerData: {
         count,
-        limit,
+        chunkSize: PARAMS_DEFAULT.PROMOTIONS_CHUNK_SIZE,
         aliasModule: path.resolve(__dirname, '../workers/promotionsWorker.ts'),
       },
     }
@@ -61,7 +61,7 @@ export const insertPromotions = (req: Request, res: Response) => {
       res.status(200).json({
         page: PARAMS_DEFAULT.PROMOTIONS_PAGE,
         promotions: data,
-        totalPages: calcTotalPages(count, limit),
+        total: calcTotalPages(count, limit),
       });
     }
 

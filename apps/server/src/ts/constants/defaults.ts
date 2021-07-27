@@ -8,6 +8,7 @@ export interface IConfigDefault {
 }
 
 export interface IParamsDefault {
+  PROMOTIONS_CHUNK_SIZE: number;
   PROMOTIONS_COUNT: number;
   PROMOTIONS_LIMIT: number;
   PROMOTIONS_PAGE: number;

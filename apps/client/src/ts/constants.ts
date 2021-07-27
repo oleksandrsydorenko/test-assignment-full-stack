@@ -3,6 +3,11 @@ export interface IApiRoute {
   PROMOTIONS: string;
 }
 
+export interface IParamsDefault {
+  PROMOTIONS_COUNT: number;
+  PROMOTIONS_LIMIT: number;
+}
+
 export interface IPromotionType {
   BASIC: 'Basic';
   COMMON: 'Common';

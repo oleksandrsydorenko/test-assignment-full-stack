@@ -1,5 +1,5 @@
 /* eslint-disable react/no-array-index-key */
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import {
   Table,
   TableBody,
@@ -55,16 +55,19 @@ const DataTable = ({ data, page, total, fetchMore }: IDataTableProps) => {
     'Actions',
   ];
 
-  useEffect(() => {
-    const onScroll = (e: any) => {
+  const onScroll = useCallback(
+    (e: any) => {
       const { offsetHeight, scrollHeight, scrollTop } = e.currentTarget;
       const scrollPosition = scrollTop + offsetHeight;
 
       if (scrollPosition === scrollHeight && page + 1 <= total) {
         fetchMore(page + 1);
       }
-    };
+    },
+    [page, total]
+  );
 
+  useEffect(() => {
     if (ref.current) {
       ref.current.addEventListener('scroll', onScroll);
     }
@@ -74,7 +77,7 @@ const DataTable = ({ data, page, total, fetchMore }: IDataTableProps) => {
         ref.current.removeEventListener('scroll', onScroll);
       }
     };
-  }, [page, ref, total]);
+  }, [ref, onScroll]);
 
   return (
     <TableContainer className={classes.container} ref={ref}>

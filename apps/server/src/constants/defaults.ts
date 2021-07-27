@@ -10,6 +10,7 @@ export const CONFIG_DEFAULT: IConfigDefault = {
 };
 
 export const PARAMS_DEFAULT: IParamsDefault = {
+  PROMOTIONS_CHUNK_SIZE: 100,
   PROMOTIONS_COUNT: 1000,
   PROMOTIONS_LIMIT: 50,
   PROMOTIONS_PAGE: 1,
