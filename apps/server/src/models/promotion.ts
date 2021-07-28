@@ -1,18 +1,15 @@
 import { model, Schema } from 'mongoose';
+
 import { IPromotionDocument, IPromotionModel } from '../ts';
 
-const PromotionSchema: Schema = new Schema(
-  {
-    name: String,
-    type: String,
-    startDate: Number,
-    endDate: Number,
-    userGroupName: String,
-  },
-  {
-    timestamps: true,
-  }
-);
+const PromotionSchema: Schema = new Schema({
+  name: String,
+  startDate: Number,
+  endDate: Number,
+  serialNumber: Number,
+  type: String,
+  userGroupName: String,
+});
 
 const PromotionModel: IPromotionModel = model<
   IPromotionDocument,

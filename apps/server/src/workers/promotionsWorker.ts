@@ -13,6 +13,7 @@ const chunksNumber = Math.ceil(count / chunkSize);
 for (let i = 0; i < chunksNumber; i++) {
   const itemsNumber =
     chunkSize * (i + 1) <= count ? chunkSize : count % chunkSize;
+  const startNumber = chunkSize * i + 1;
 
-  parentPort?.postMessage(generatePromotions(itemsNumber));
+  parentPort?.postMessage(generatePromotions(itemsNumber, startNumber));
 }

@@ -4,10 +4,17 @@ import { Box, DataGenerator, DataTable, Heading } from '../components';
 import { api } from '../services';
 import { log } from '../utils';
 import { PARAMS_DEFAULT } from '../constants';
+import { IPromotion } from '../ts';
+
+interface IData {
+  page: number;
+  promotions: IPromotion[];
+  total: number;
+}
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState({
+  const [data, setData] = useState<IData>({
     page: 0,
     promotions: [],
     total: 0,
@@ -18,37 +25,45 @@ const Home = () => {
     setLoading(false);
   };
 
-  const onRequestSuccess = (res: any) => {
-    setData(prevData => ({
-      ...prevData,
-      ...res,
-      promotions: [...prevData.promotions, ...res.promotions],
-    }));
+  const onRequestSuccess = (newData: IData) => {
+    if (newData) {
+      setData(newData);
+    }
+
     setLoading(false);
   };
 
   const generateData = useCallback(() => {
     setLoading(true);
     api.generatePromotions({
-      data: {
-        count: PARAMS_DEFAULT.PROMOTIONS_COUNT,
-        limit: PARAMS_DEFAULT.PROMOTIONS_LIMIT,
-      },
-      onSuccess: onRequestSuccess,
+      count: PARAMS_DEFAULT.PROMOTIONS_COUNT,
+      limit: PARAMS_DEFAULT.PROMOTIONS_LIMIT,
+      onSuccess: res =>
+        onRequestSuccess({
+          ...data,
+          ...res,
+          promotions: [...data.promotions, ...res.promotions],
+        }),
       onError: onRequestError,
     });
   }, [data]);
 
-  const fetchData = useCallback((page = 1) => {
-    api.fetchPromotions({
-      params: {
+  const fetchData = useCallback(
+    (page = 1) =>
+      api.fetchPromotions({
         page,
         limit: PARAMS_DEFAULT.PROMOTIONS_LIMIT,
-      },
-      onSuccess: onRequestSuccess,
-      onError: onRequestError,
-    });
-  }, []);
+        onSuccess: res => {
+          onRequestSuccess({
+            ...data,
+            ...res,
+            promotions: [...data.promotions, ...res.promotions],
+          });
+        },
+        onError: onRequestError,
+      }),
+    [data]
+  );
 
   const editItem = useCallback(({ dataToUpdate, event, id, callback }) => {
     log.info(dataToUpdate);
@@ -56,15 +71,39 @@ const Home = () => {
     callback(event);
   }, []);
 
-  const deleteItem = useCallback(({ event, id, callback }) => {
-    log.info(id);
-    callback(event);
-  }, []);
+  const deleteItem = useCallback(
+    ({ event, id, callback }) =>
+      api.deletePromotion({
+        id,
+        onSuccess: () => {
+          onRequestSuccess({
+            ...data,
+            promotions: data.promotions.filter(item => item.id !== id),
+          });
+          callback(event);
+        },
+        onError: onRequestError,
+      }),
+    [data]
+  );
 
-  const duplicateItem = useCallback(({ event, id, callback }) => {
-    log.info(id);
-    callback(event);
-  }, []);
+  const duplicateItem = useCallback(
+    ({ event, id, callback }) =>
+      api.duplicatePromotion({
+        id,
+        page: data.page,
+        limit: PARAMS_DEFAULT.PROMOTIONS_LIMIT,
+        onSuccess: res => {
+          onRequestSuccess({
+            ...data,
+            promotions: res,
+          });
+          callback(event);
+        },
+        onError: onRequestError,
+      }),
+    [data]
+  );
 
   useEffect(() => {
     fetchData();

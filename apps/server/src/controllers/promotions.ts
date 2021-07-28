@@ -3,23 +3,16 @@ import { Request, Response } from 'express';
 import { Worker } from 'worker_threads';
 
 import { Promotion } from '../models';
-import { handleInternalServerError, log, parseStringToNumber } from '../utils';
+import {
+  formatPromotionsResponse,
+  handleInternalServerError,
+  log,
+  parseStringToNumber,
+} from '../utils';
 import { PARAMS_DEFAULT } from '../constants';
-import { IPromotionDocument, IPromotionResponse } from '../ts';
 
 const calcTotalPages = (count: number, limit: number) =>
   Math.ceil(count / limit);
-
-const formatResponse = (data: IPromotionDocument[]): IPromotionResponse[] =>
-  data.map(({ _id, name, type, startDate, endDate, userGroupName }) => ({
-    name,
-    type,
-    startDate,
-    endDate,
-    userGroupName,
-    // eslint-disable-next-line no-underscore-dangle
-    id: _id,
-  }));
 
 export const getPromotions = async (req: Request, res: Response) => {
   const { limit: limitParam, page: pageParam } = req.query;
@@ -32,14 +25,15 @@ export const getPromotions = async (req: Request, res: Response) => {
 
   try {
     const result = await Promotion.find()
+      .sort({ serialNumber: 1 })
       .limit(limit)
-      .skip(page * limit);
+      .skip((page - 1) * limit);
 
     const count = await Promotion.countDocuments();
 
     res.json({
       page,
-      promotions: formatResponse(result),
+      promotions: formatPromotionsResponse(result),
       total: calcTotalPages(count, limit),
     });
   } catch (err) {
@@ -76,7 +70,7 @@ export const insertPromotions = (req: Request, res: Response) => {
       if (!res.writableEnded) {
         res.json({
           page: PARAMS_DEFAULT.PROMOTIONS_PAGE,
-          promotions: formatResponse(result),
+          promotions: formatPromotionsResponse(result),
           total: calcTotalPages(totalDocuments, limit),
         });
       }
@@ -92,7 +86,7 @@ export const insertPromotions = (req: Request, res: Response) => {
 
 export const deletePromotions = async (req: Request, res: Response) => {
   try {
-    await Promotion.collection.deleteMany({});
+    await Promotion.deleteMany({});
     res.status(200).end();
   } catch (err) {
     handleInternalServerError(err, res);

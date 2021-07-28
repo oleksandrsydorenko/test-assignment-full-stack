@@ -29,10 +29,10 @@ const randomizeMapValue = <T>(map: T): string => {
   return keys[randomizeNumber(keys.length)];
 };
 
-const generate: IGeneratePromotions = count => {
+const generate: IGeneratePromotions = (itemsNumber, startNumber) => {
   const promotions: IPromotion[] = [];
 
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < itemsNumber; i++) {
     const startDate = randomizeDate(MAX_DATE_RANGE_IN_MS);
 
     promotions.push({
@@ -43,6 +43,7 @@ const generate: IGeneratePromotions = count => {
         length: 3,
       }),
       endDate: startDate + randomizeNumber(MAX_DATE_RANGE_IN_MS),
+      serialNumber: startNumber + i,
       type: randomizeMapValue<IPromotionType>(
         PROMOTION_TYPE
       ) as PromotionTypeKeys,

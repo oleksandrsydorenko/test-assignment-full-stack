@@ -9,4 +9,8 @@ export const ERROR_RESPONSE: IErrorResponse = {
     code: 'INTERNAL_SERVER_ERROR',
     message: 'Internal server error',
   },
+  NOT_FOUND_ERROR: {
+    code: 'NOT_FOUND_ERROR',
+    message: 'Not found error',
+  },
 };

@@ -1,13 +1,12 @@
 export interface IFetchPromotions {
   ({
-    params,
+    page,
+    limit,
     onError,
     onSuccess,
   }: {
-    params: {
-      page: number;
-      limit: number;
-    };
+    page: number;
+    limit: number;
     onError: (error: Error) => void;
     onSuccess: (response: any) => void;
   }): void;
@@ -15,14 +14,13 @@ export interface IFetchPromotions {
 
 export interface IGeneratePromotions {
   ({
-    data,
+    count,
+    limit,
     onError,
     onSuccess,
   }: {
-    data: {
-      count: number;
-      limit: number;
-    };
+    count: number;
+    limit: number;
     onError: (error: Error) => void;
     onSuccess: (response: any) => void;
   }): void;
@@ -33,6 +31,34 @@ export interface IDeletePromotions {
     onError,
     onSuccess,
   }: {
+    onError: (error: Error) => void;
+    onSuccess: (response: any) => void;
+  }): void;
+}
+
+export interface IDeletePromotion {
+  ({
+    id,
+    onError,
+    onSuccess,
+  }: {
+    id: string;
+    onError: (error: Error) => void;
+    onSuccess: (response: any) => void;
+  }): void;
+}
+
+export interface IDuplicatePromotion {
+  ({
+    id,
+    page,
+    limit,
+    onError,
+    onSuccess,
+  }: {
+    id: string;
+    page: number;
+    limit: number;
     onError: (error: Error) => void;
     onSuccess: (response: any) => void;
   }): void;

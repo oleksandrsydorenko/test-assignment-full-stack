@@ -1,5 +1,5 @@
 import { IPromotion } from '../models';
 
 export interface IGeneratePromotions {
-  (count: number): IPromotion[];
+  (itemsNumber: number, startNumber: number): IPromotion[];
 }

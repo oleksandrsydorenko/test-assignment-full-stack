@@ -1,14 +1,14 @@
 import { Router } from 'express';
 
 import {
-  clonePromotion,
+  duplicatePromotion,
   updatePromotion,
   deletePromotion,
 } from '../controllers';
 import { ROUTE } from '../constants';
 
 export default (app: Router): void => {
-  app.post(ROUTE.PROMOTION, clonePromotion);
+  app.post(ROUTE.PROMOTION, duplicatePromotion);
   app.put(ROUTE.PROMOTION, updatePromotion);
   app.delete(ROUTE.PROMOTION, deletePromotion);
 };

@@ -9,6 +9,7 @@ export interface IPromotion {
   name: string;
   startDate: number;
   endDate: number;
+  serialNumber: number;
   type: PromotionTypeKeys;
   userGroupName: PromotionUserGroupNameKeys;
 }

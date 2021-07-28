@@ -1,7 +1,7 @@
 import { IRoute } from '../ts';
 
 const ROUTE: IRoute = {
-  PROMOTION: '/promotions/:id',
+  PROMOTION: '/promotion',
   PROMOTIONS: '/promotions',
 };
 

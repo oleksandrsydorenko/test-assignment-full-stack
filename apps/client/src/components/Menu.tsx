@@ -1,6 +1,6 @@
 import React from 'react';
 import { Menu as MaterialUIMenu } from '@material-ui/core';
-import { MoreHoriz } from '@material-ui/icons';
+import { MoreVertTwoTone } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { IEvent } from '../ts';
@@ -23,7 +23,7 @@ const Menu = ({ renderMenuItems }: IMenuProps) => {
 
   return (
     <div>
-      <MoreHoriz className={classes.menuButton} onClick={onButtonClick} />
+      <MoreVertTwoTone className={classes.menuButton} onClick={onButtonClick} />
       <MaterialUIMenu
         keepMounted
         anchorEl={anchorEl}

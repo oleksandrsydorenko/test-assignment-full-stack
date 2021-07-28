@@ -9,4 +9,5 @@ export interface IErrorMongoose {
 
 export interface IErrorResponse {
   INTERNAL_SERVER_ERROR: IError;
+  NOT_FOUND_ERROR: IError;
 }

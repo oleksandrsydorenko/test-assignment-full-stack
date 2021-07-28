@@ -31,6 +31,7 @@ interface IEditItem {
       name: string;
       startDate: number;
       endDate: number;
+      serialNumber: number;
       type: PromotionTypeKeys;
       userGroupName: PromotionUserGroupNameKeys;
     };
@@ -75,6 +76,7 @@ interface IDataTableProps {
 }
 
 const tableHeadCells = [
+  '#',
   'Name',
   'Type',
   'Start Date',
@@ -129,13 +131,13 @@ const DataTable = ({
     ({ id, callback }) =>
       (event: IEvent) =>
         deleteItem({ event, id, callback }),
-    []
+    [data]
   );
   const onDuplicateItemClick = useCallback(
     ({ id, callback }) =>
       (event: IEvent) =>
         duplicateItem({ event, id, callback }),
-    []
+    [data]
   );
   const onScroll = useCallback(
     (event: IEvent) => {
@@ -182,6 +184,7 @@ const DataTable = ({
         <TableBody>
           {data.map((row, j) => {
             const tableBodyCells = [
+              j + 1,
               row.name,
               row.type,
               formatDate(row.startDate),
