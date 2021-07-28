@@ -27,12 +27,10 @@ interface IAction {
 
 interface IDataTableProps {
   data: IPromotion[];
-  page: number;
-  total: number;
   onEditItemAction: (data: IPromotion) => void;
   onDeleteItemAction: IAction;
   onDuplicateItemAction: IAction;
-  fetchMore: (nextPage: number) => void;
+  fetchMore: () => void;
 }
 
 const tableHeadCells = [
@@ -65,14 +63,12 @@ const StyledTableRow = withStyles(theme => ({
 
 const useStyles = makeStyles({
   container: {
-    height: '100vh',
+    height: 'calc(100vh - 80px)',
   },
 });
 
 const DataTable = ({
   data,
-  page,
-  total,
   onEditItemAction,
   onDeleteItemAction,
   onDuplicateItemAction,
@@ -106,11 +102,11 @@ const DataTable = ({
       const { offsetHeight, scrollHeight, scrollTop } = event.currentTarget;
       const scrollPosition = scrollTop + offsetHeight;
 
-      if (scrollPosition === scrollHeight && page + 1 <= total) {
-        fetchMore(page + 1);
+      if (scrollPosition === scrollHeight) {
+        fetchMore();
       }
     },
-    [page, total]
+    [data]
   );
 
   const menuItems = [
@@ -133,7 +129,7 @@ const DataTable = ({
 
   return (
     <TableContainer className={classes.container} ref={ref}>
-      <Table>
+      <Table stickyHeader>
         <TableHead>
           <TableRow>
             {tableHeadCells.map((item, i) => (

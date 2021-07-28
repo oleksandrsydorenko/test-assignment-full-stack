@@ -1,3 +1,3 @@
 export * from './api';
-export * from './defaults';
+export * from './params';
 export * from './promotions';

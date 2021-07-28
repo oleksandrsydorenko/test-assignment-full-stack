@@ -4,15 +4,13 @@ import { Worker } from 'worker_threads';
 
 import { Promotion } from '../models';
 import {
+  calcTotalPages,
   formatPromotionsResponse,
   handleInternalServerError,
   log,
   parseStringToNumber,
 } from '../utils';
 import { PARAMS_DEFAULT } from '../constants';
-
-const calcTotalPages = (count: number, limit: number) =>
-  Math.ceil(count / limit);
 
 export const getPromotions = async (req: Request, res: Response) => {
   const { limit: limitParam, page: pageParam } = req.query;
@@ -62,6 +60,7 @@ export const insertPromotions = (req: Request, res: Response) => {
   worker.on('message', async data => {
     try {
       const result = await Promotion.insertMany(data);
+      const slicedResult = result.slice(0, limit);
 
       log.info('%s promotions were successfully stored', result.length);
 
@@ -70,7 +69,7 @@ export const insertPromotions = (req: Request, res: Response) => {
       if (!res.writableEnded) {
         res.json({
           page: PARAMS_DEFAULT.PROMOTIONS_PAGE,
-          promotions: formatPromotionsResponse(result),
+          promotions: formatPromotionsResponse(slicedResult),
           total: calcTotalPages(totalDocuments, limit),
         });
       }

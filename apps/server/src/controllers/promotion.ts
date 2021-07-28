@@ -2,11 +2,13 @@ import { Request, Response } from 'express';
 
 import { Promotion } from '../models';
 import {
+  calcTotalPages,
   formatPromotionsResponse,
   handleInternalServerError,
   handleNotFoundError,
   parseStringToNumber,
 } from '../utils';
+import { PARAMS_DEFAULT } from '../constants';
 import { IPromotionDocument, IPromotion } from '../ts';
 
 const prepareData = (document: IPromotionDocument): IPromotion => ({
@@ -21,7 +23,9 @@ const prepareData = (document: IPromotionDocument): IPromotion => ({
 export const duplicatePromotion = async (req: Request, res: Response) => {
   const { id, page: pageParam, limit: limitParam } = req.body;
   const page = parseStringToNumber(pageParam);
-  const limit = parseStringToNumber(limitParam);
+  const limit = limitParam
+    ? parseStringToNumber(limitParam)
+    : PARAMS_DEFAULT.PROMOTIONS_LIMIT;
 
   try {
     const prototype = await Promotion.findById(id);
@@ -32,7 +36,10 @@ export const duplicatePromotion = async (req: Request, res: Response) => {
       const result = await Promotion.find().sort({ serialNumber: 1 });
       const slicedResult = result.slice(0, page * limit + 1);
 
-      res.status(200).json(formatPromotionsResponse(slicedResult));
+      res.status(200).json({
+        promotions: formatPromotionsResponse(slicedResult),
+        total: calcTotalPages(result.length, limit),
+      });
     } else {
       handleNotFoundError(res);
     }
@@ -58,13 +65,20 @@ export const updatePromotion = async (req: Request, res: Response) => {
 };
 
 export const deletePromotion = async (req: Request, res: Response) => {
-  const { id } = req.body;
+  const { id, limit: limitParam } = req.body;
+  const limit = limitParam
+    ? parseStringToNumber(limitParam)
+    : PARAMS_DEFAULT.PROMOTIONS_LIMIT;
 
   try {
     const result = await Promotion.findByIdAndDelete(id);
 
     if (result) {
-      res.status(200).json(result);
+      const totalDocuments = await Promotion.countDocuments();
+
+      res.status(200).json({
+        total: calcTotalPages(totalDocuments, limit),
+      });
     } else {
       handleNotFoundError(res);
     }

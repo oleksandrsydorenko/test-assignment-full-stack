@@ -1,9 +1,9 @@
 import { format } from 'date-fns';
 
-import { DATE_TIME_DEFAULT } from '../constants';
+import { DATE_TIME_FORMAT } from '../constants';
 import { ISelectItem } from '../ts';
 
-export const formatDate = (ms: number) => format(ms, DATE_TIME_DEFAULT);
+export const formatDate = (ms: number) => format(ms, DATE_TIME_FORMAT);
 
 export const prepareSelectItems = <T>(map: T): ISelectItem[] =>
   Object.entries(map).map(item => ({

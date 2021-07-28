@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { EditDialog, DataGenerator, DataTable } from '../components';
 import { api } from '../services';
 import { log } from '../utils';
-import { PARAMS_DEFAULT } from '../constants';
+import { PARAMS } from '../constants';
 import { IPromotion } from '../ts';
 
 interface IData {
@@ -20,7 +20,7 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 50,
+    padding: 25,
     fontSize: 20,
     fontWeight: 400,
   },
@@ -51,44 +51,6 @@ const Home = () => {
 
     setLoading(false);
   };
-
-  const generateData = useCallback(() => {
-    setLoading(true);
-    api.generatePromotions({
-      params: {
-        count: PARAMS_DEFAULT.PROMOTIONS_COUNT,
-        limit: PARAMS_DEFAULT.PROMOTIONS_LIMIT,
-      },
-      onSuccess: res =>
-        onRequestSuccess({
-          ...data,
-          ...res,
-          promotions: [...data.promotions, ...res.promotions],
-        }),
-      onError: onRequestError,
-    });
-  }, [data]);
-
-  const fetchData = useCallback(
-    (page = 1) => {
-      setLoading(true);
-      api.fetchPromotions({
-        params: {
-          page,
-          limit: PARAMS_DEFAULT.PROMOTIONS_LIMIT,
-        },
-        onSuccess: res => {
-          onRequestSuccess({
-            ...data,
-            ...res,
-            promotions: [...data.promotions, ...res.promotions],
-          });
-        },
-        onError: onRequestError,
-      });
-    },
-    [data]
-  );
 
   const editItem = useCallback(
     dataToUpdate => {
@@ -125,10 +87,13 @@ const Home = () => {
       api.deletePromotion({
         params: {
           id,
+          limit: PARAMS.PROMOTIONS_LIMIT,
         },
-        onSuccess: () => {
+        onSuccess: res => {
           onRequestSuccess({
             ...data,
+            ...res,
+            page: Math.ceil(data.promotions.length / PARAMS.PROMOTIONS_LIMIT),
             promotions: data.promotions.filter(item => item.id !== id),
           });
           callback(event);
@@ -144,12 +109,13 @@ const Home = () => {
         params: {
           id,
           page: data.page,
-          limit: PARAMS_DEFAULT.PROMOTIONS_LIMIT,
+          limit: PARAMS.PROMOTIONS_LIMIT,
         },
         onSuccess: res => {
           onRequestSuccess({
             ...data,
-            promotions: res,
+            ...res,
+            page: Math.ceil(data.promotions.length / PARAMS.PROMOTIONS_LIMIT),
           });
           callback(event);
         },
@@ -157,6 +123,45 @@ const Home = () => {
       }),
     [data]
   );
+
+  const fetchData = useCallback(() => {
+    if (data.page && data.page >= data.total) {
+      return;
+    }
+
+    setLoading(true);
+    api.fetchPromotions({
+      params: {
+        page: data.page + 1,
+        limit: PARAMS.PROMOTIONS_LIMIT,
+      },
+      onSuccess: res => {
+        onRequestSuccess({
+          ...data,
+          ...res,
+          promotions: [...data.promotions, ...res.promotions],
+        });
+      },
+      onError: onRequestError,
+    });
+  }, [data]);
+
+  const generateData = useCallback(() => {
+    setLoading(true);
+    api.generatePromotions({
+      params: {
+        count: PARAMS.PROMOTIONS_COUNT,
+        limit: PARAMS.PROMOTIONS_LIMIT,
+      },
+      onSuccess: res =>
+        onRequestSuccess({
+          ...data,
+          ...res,
+          promotions: [...data.promotions, ...res.promotions],
+        }),
+      onError: onRequestError,
+    });
+  }, [data]);
 
   useEffect(() => {
     fetchData();
@@ -166,8 +171,6 @@ const Home = () => {
     <>
       <DataTable
         data={data.promotions}
-        page={data.page}
-        total={data.total}
         onEditItemAction={onEditItemAction}
         onDeleteItemAction={deleteItem}
         onDuplicateItemAction={duplicateItem}

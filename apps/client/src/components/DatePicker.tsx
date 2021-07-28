@@ -6,7 +6,7 @@ import {
   MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
 
-import { DATE_TIME_DEFAULT } from '../constants';
+import { DATE_TIME_FORMAT } from '../constants';
 
 interface IDatePickerProps {
   label: string;
@@ -18,7 +18,7 @@ const DatePicker = ({ label, value, onChange }: IDatePickerProps) => (
   <MuiPickersUtilsProvider utils={DateFnsUtils}>
     <KeyboardDatePicker
       disableToolbar
-      format={DATE_TIME_DEFAULT}
+      format={DATE_TIME_FORMAT}
       label={label}
       margin="normal"
       value={value}

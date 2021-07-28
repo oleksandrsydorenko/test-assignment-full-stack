@@ -30,6 +30,7 @@ export interface IDeletePromotion {
   }: {
     params: {
       id: string;
+      limit: number;
     };
     onError: (error: Error) => void;
     onSuccess: (response: any) => void;
