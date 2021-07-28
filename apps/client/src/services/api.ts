@@ -1,45 +1,14 @@
 import { API_ROUTE } from '../constants';
-import { del, get, post } from './http';
+import { del, get, post, put } from './http';
 
 import {
   IDeletePromotions,
   IDeletePromotion,
   IDuplicatePromotion,
+  IEditPromotion,
   IFetchPromotions,
   IGeneratePromotions,
 } from '../ts';
-
-export const fetchPromotions: IFetchPromotions = ({
-  limit,
-  page,
-  onError,
-  onSuccess,
-}) =>
-  get({
-    params: {
-      limit,
-      page,
-    },
-    url: API_ROUTE.PROMOTIONS,
-    onError,
-    onSuccess,
-  });
-
-export const generatePromotions: IGeneratePromotions = ({
-  count,
-  limit,
-  onError,
-  onSuccess,
-}) =>
-  post({
-    data: {
-      count,
-      limit,
-    },
-    url: API_ROUTE.PROMOTIONS,
-    onError,
-    onSuccess,
-  });
 
 export const deletePromotions: IDeletePromotions = ({ onError, onSuccess }) =>
   del({
@@ -48,30 +17,58 @@ export const deletePromotions: IDeletePromotions = ({ onError, onSuccess }) =>
     onSuccess,
   });
 
-export const deletePromotion: IDeletePromotion = ({ id, onError, onSuccess }) =>
+export const deletePromotion: IDeletePromotion = ({
+  params,
+  onError,
+  onSuccess,
+}) =>
   del({
-    data: {
-      id,
-    },
+    data: params,
     url: API_ROUTE.PROMOTION,
     onError,
     onSuccess,
   });
 
 export const duplicatePromotion: IDuplicatePromotion = ({
-  id,
-  limit,
-  page,
+  params,
   onError,
   onSuccess,
 }) =>
   post({
-    data: {
-      id,
-      limit,
-      page,
-    },
+    data: params,
     url: API_ROUTE.PROMOTION,
+    onError,
+    onSuccess,
+  });
+
+export const editPromotion: IEditPromotion = ({ params, onError, onSuccess }) =>
+  put({
+    data: params,
+    url: API_ROUTE.PROMOTION,
+    onError,
+    onSuccess,
+  });
+
+export const fetchPromotions: IFetchPromotions = ({
+  params,
+  onError,
+  onSuccess,
+}) =>
+  get({
+    params,
+    url: API_ROUTE.PROMOTIONS,
+    onError,
+    onSuccess,
+  });
+
+export const generatePromotions: IGeneratePromotions = ({
+  params,
+  onError,
+  onSuccess,
+}) =>
+  post({
+    data: params,
+    url: API_ROUTE.PROMOTIONS,
     onError,
     onSuccess,
   });

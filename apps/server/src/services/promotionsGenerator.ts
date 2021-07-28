@@ -10,8 +10,8 @@ import {
   IPromotion,
   IPromotionType,
   IPromotionUserGroupName,
-  PromotionTypeKeys,
-  PromotionUserGroupNameKeys,
+  PromotionTypes,
+  PromotionUserGroupNames,
 } from '../ts';
 import { PROMOTION_TYPE, PROMOTION_USER_GROUP_NAME } from '../constants';
 
@@ -23,10 +23,10 @@ const randomizeNumber = (range: number): number =>
 const randomizeDate = (date: number): number =>
   Date.now() + randomizeNumber(date);
 
-const randomizeMapValue = <T>(map: T): string => {
-  const keys: string[] = Object.values(map);
+const randomizeMapValue = <T, K>(map: T): K => {
+  const values: K[] = Object.values(map);
 
-  return keys[randomizeNumber(keys.length)];
+  return values[randomizeNumber(values.length)];
 };
 
 const generate: IGeneratePromotions = (itemsNumber, startNumber) => {
@@ -44,12 +44,11 @@ const generate: IGeneratePromotions = (itemsNumber, startNumber) => {
       }),
       endDate: startDate + randomizeNumber(MAX_DATE_RANGE_IN_MS),
       serialNumber: startNumber + i,
-      type: randomizeMapValue<IPromotionType>(
-        PROMOTION_TYPE
-      ) as PromotionTypeKeys,
-      userGroupName: randomizeMapValue<IPromotionUserGroupName>(
-        PROMOTION_USER_GROUP_NAME
-      ) as PromotionUserGroupNameKeys,
+      type: randomizeMapValue<IPromotionType, PromotionTypes>(PROMOTION_TYPE),
+      userGroupName: randomizeMapValue<
+        IPromotionUserGroupName,
+        PromotionUserGroupNames
+      >(PROMOTION_USER_GROUP_NAME),
     });
   }
 

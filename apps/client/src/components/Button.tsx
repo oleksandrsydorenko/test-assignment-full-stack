@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button as MaterialUIButton } from '@material-ui/core';
+import MaterialUIButton from '@material-ui/core/Button';
 
 import { IEvent } from '../ts';
 

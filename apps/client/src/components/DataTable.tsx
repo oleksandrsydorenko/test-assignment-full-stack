@@ -1,59 +1,19 @@
 /* eslint-disable react/no-array-index-key */
 import React, { memo, useCallback, useEffect, useRef } from 'react';
-import {
-  MenuItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from '@material-ui/core';
+import MenuItem from '@material-ui/core/MenuItem';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 
-import Menu from './Menu';
+import ActionsMenu from './ActionsMenu';
 import { formatDate } from '../utils';
-import {
-  IEvent,
-  IPromotion,
-  PromotionTypeKeys,
-  PromotionUserGroupNameKeys,
-} from '../ts';
+import { IEvent, IPromotion } from '../ts';
 
-interface IEditItem {
-  ({
-    dataToUpdate,
-    event,
-    id,
-    callback,
-  }: {
-    dataToUpdate: {
-      name: string;
-      startDate: number;
-      endDate: number;
-      serialNumber: number;
-      type: PromotionTypeKeys;
-      userGroupName: PromotionUserGroupNameKeys;
-    };
-    event: IEvent;
-    id: string;
-    callback: (event: IEvent) => void;
-  }): void;
-}
-
-interface IDeleteItem {
-  ({
-    event,
-    id,
-    callback,
-  }: {
-    event: IEvent;
-    id: string;
-    callback: (event: IEvent) => void;
-  }): void;
-}
-
-interface IDuplicateItem {
+interface IAction {
   ({
     event,
     id,
@@ -69,9 +29,9 @@ interface IDataTableProps {
   data: IPromotion[];
   page: number;
   total: number;
-  editItem: IEditItem;
-  deleteItem: IDeleteItem;
-  duplicateItem: IDuplicateItem;
+  onEditItemAction: (data: IPromotion) => void;
+  onDeleteItemAction: IAction;
+  onDuplicateItemAction: IAction;
   fetchMore: (nextPage: number) => void;
 }
 
@@ -113,30 +73,32 @@ const DataTable = ({
   data,
   page,
   total,
-  editItem,
-  deleteItem,
-  duplicateItem,
+  onEditItemAction,
+  onDeleteItemAction,
+  onDuplicateItemAction,
   fetchMore,
 }: IDataTableProps) => {
   const classes = useStyles();
   const ref = useRef<HTMLDivElement>(null);
 
   const onEditItemClick = useCallback(
-    ({ id, dataToUpdate, callback }) =>
-      (event: IEvent) =>
-        editItem({ dataToUpdate, event, id, callback }),
+    ({ row, callback }) =>
+      (event: IEvent) => {
+        onEditItemAction(row);
+        callback(event);
+      },
     []
   );
   const onDeleteItemClick = useCallback(
-    ({ id, callback }) =>
+    ({ row, callback }) =>
       (event: IEvent) =>
-        deleteItem({ event, id, callback }),
+        onDeleteItemAction({ event, callback, id: row.id }),
     [data]
   );
   const onDuplicateItemClick = useCallback(
-    ({ id, callback }) =>
+    ({ row, callback }) =>
       (event: IEvent) =>
-        duplicateItem({ event, id, callback }),
+        onDuplicateItemAction({ event, callback, id: row.id }),
     [data]
   );
   const onScroll = useCallback(
@@ -190,13 +152,13 @@ const DataTable = ({
               formatDate(row.startDate),
               formatDate(row.endDate),
               row.userGroupName,
-              <Menu
-                renderMenuItems={onMenuClose =>
+              <ActionsMenu
+                renderItems={onMenuClose =>
                   menuItems.map((item, k) => (
                     <MenuItem
                       key={k}
                       onClick={item.onClick({
-                        id: row.id,
+                        row,
                         callback: onMenuClose,
                       })}
                     >

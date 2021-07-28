@@ -41,18 +41,30 @@ export const duplicatePromotion = async (req: Request, res: Response) => {
   }
 };
 
-export const updatePromotion = (req: Request, res: Response) => {
-  res.status(200).end();
+export const updatePromotion = async (req: Request, res: Response) => {
+  const { id, ...rest } = req.body;
+
+  try {
+    const result = await Promotion.findByIdAndUpdate(id, rest);
+
+    if (result) {
+      res.status(200).end();
+    } else {
+      handleNotFoundError(res);
+    }
+  } catch (err) {
+    handleInternalServerError(err, res);
+  }
 };
 
 export const deletePromotion = async (req: Request, res: Response) => {
   const { id } = req.body;
 
   try {
-    const result = await Promotion.deleteOne({ _id: id });
+    const result = await Promotion.findByIdAndDelete(id);
 
-    if (result.deletedCount) {
-      res.status(200).end();
+    if (result) {
+      res.status(200).json(result);
     } else {
       handleNotFoundError(res);
     }

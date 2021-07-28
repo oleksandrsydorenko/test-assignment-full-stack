@@ -1,26 +1,12 @@
-export interface IFetchPromotions {
-  ({
-    page,
-    limit,
-    onError,
-    onSuccess,
-  }: {
-    page: number;
-    limit: number;
-    onError: (error: Error) => void;
-    onSuccess: (response: any) => void;
-  }): void;
-}
+import { IPromotion } from '../models';
 
-export interface IGeneratePromotions {
+export interface IEditPromotion {
   ({
-    count,
-    limit,
+    params,
     onError,
     onSuccess,
   }: {
-    count: number;
-    limit: number;
+    params: IPromotion;
     onError: (error: Error) => void;
     onSuccess: (response: any) => void;
   }): void;
@@ -38,11 +24,13 @@ export interface IDeletePromotions {
 
 export interface IDeletePromotion {
   ({
-    id,
+    params,
     onError,
     onSuccess,
   }: {
-    id: string;
+    params: {
+      id: string;
+    };
     onError: (error: Error) => void;
     onSuccess: (response: any) => void;
   }): void;
@@ -50,15 +38,44 @@ export interface IDeletePromotion {
 
 export interface IDuplicatePromotion {
   ({
-    id,
-    page,
-    limit,
+    params,
     onError,
     onSuccess,
   }: {
-    id: string;
-    page: number;
-    limit: number;
+    params: {
+      id: string;
+      page: number;
+      limit: number;
+    };
+    onError: (error: Error) => void;
+    onSuccess: (response: any) => void;
+  }): void;
+}
+export interface IFetchPromotions {
+  ({
+    params,
+    onError,
+    onSuccess,
+  }: {
+    params: {
+      page: number;
+      limit: number;
+    };
+    onError: (error: Error) => void;
+    onSuccess: (response: any) => void;
+  }): void;
+}
+
+export interface IGeneratePromotions {
+  ({
+    params,
+    onError,
+    onSuccess,
+  }: {
+    params: {
+      count: number;
+      limit: number;
+    };
     onError: (error: Error) => void;
     onSuccess: (response: any) => void;
   }): void;

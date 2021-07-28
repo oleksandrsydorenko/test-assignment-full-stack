@@ -6,7 +6,10 @@ const PromotionSchema: Schema = new Schema({
   name: String,
   startDate: Number,
   endDate: Number,
-  serialNumber: Number,
+  serialNumber: {
+    type: Number,
+    immutable: true,
+  },
   type: String,
   userGroupName: String,
 });

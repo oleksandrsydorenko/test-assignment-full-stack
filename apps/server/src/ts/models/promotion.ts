@@ -1,17 +1,15 @@
 import { Document, Model } from 'mongoose';
-import { IPromotionType, IPromotionUserGroupName } from '../constants';
 
-export type PromotionTypeKeys = keyof IPromotionType;
+export type PromotionTypes = 'Basic' | 'Common' | 'Epic';
 
-export type PromotionUserGroupNameKeys = keyof IPromotionUserGroupName;
-
+export type PromotionUserGroupNames = 'Standard' | 'VIP';
 export interface IPromotion {
   name: string;
   startDate: number;
   endDate: number;
   serialNumber: number;
-  type: PromotionTypeKeys;
-  userGroupName: PromotionUserGroupNameKeys;
+  type: PromotionTypes;
+  userGroupName: PromotionUserGroupNames;
 }
 
 export interface IPromotionResponse extends IPromotion {

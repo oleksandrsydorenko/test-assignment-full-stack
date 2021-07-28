@@ -1,8 +1,6 @@
-import { IPromotionType, IPromotionUserGroupName } from './constants';
+export type PromotionTypes = 'Basic' | 'Common' | 'Epic';
 
-export type PromotionTypeKeys = keyof IPromotionType;
-
-export type PromotionUserGroupNameKeys = keyof IPromotionUserGroupName;
+export type PromotionUserGroupNames = 'Standard' | 'VIP';
 
 export interface IPromotion {
   id: string;
@@ -10,6 +8,6 @@ export interface IPromotion {
   startDate: number;
   endDate: number;
   serialNumber: number;
-  type: PromotionTypeKeys;
-  userGroupName: PromotionUserGroupNameKeys;
+  type: PromotionTypes;
+  userGroupName: PromotionUserGroupNames;
 }
