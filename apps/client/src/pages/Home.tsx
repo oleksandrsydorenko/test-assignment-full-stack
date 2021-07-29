@@ -20,8 +20,8 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 25,
-    fontSize: 20,
+    padding: 8,
+    fontSize: 16,
     fontWeight: 400,
   },
 });
@@ -36,15 +36,15 @@ const Home = () => {
   });
   const [dataToEdit, setDataToEdit] = useState<IPromotion | null>(null);
 
-  const onCloseEditModal = useCallback(() => setDataToEdit(null), []);
-  const onEditItemAction = useCallback(row => setDataToEdit(row), []);
+  const startItemEditing = useCallback(row => setDataToEdit(row), []);
+  const finishItemEditing = useCallback(() => setDataToEdit(null), []);
 
-  const onRequestError = (err: Error) => {
+  const handleErrorResponse = (err: Error) => {
     log.error(err);
     setLoading(false);
   };
 
-  const onRequestSuccess = (newData: IData) => {
+  const handleSuccessResponse = (newData: IData) => {
     if (newData) {
       setData(newData);
     }
@@ -70,13 +70,13 @@ const Home = () => {
       api.editPromotion({
         params: dataToUpdate,
         onSuccess: () => {
-          onRequestSuccess({
+          handleSuccessResponse({
             ...data,
             promotions: promotionsToUpdate,
           });
-          onCloseEditModal();
+          finishItemEditing();
         },
-        onError: onRequestError,
+        onError: handleErrorResponse,
       });
     },
     [data]
@@ -90,7 +90,7 @@ const Home = () => {
           limit: PARAMS.PROMOTIONS_LIMIT,
         },
         onSuccess: res => {
-          onRequestSuccess({
+          handleSuccessResponse({
             ...data,
             ...res,
             page: Math.ceil(data.promotions.length / PARAMS.PROMOTIONS_LIMIT),
@@ -98,7 +98,7 @@ const Home = () => {
           });
           callback(event);
         },
-        onError: onRequestError,
+        onError: handleErrorResponse,
       }),
     [data]
   );
@@ -112,14 +112,14 @@ const Home = () => {
           limit: PARAMS.PROMOTIONS_LIMIT,
         },
         onSuccess: res => {
-          onRequestSuccess({
+          handleSuccessResponse({
             ...data,
             ...res,
             page: Math.ceil(data.promotions.length / PARAMS.PROMOTIONS_LIMIT),
           });
           callback(event);
         },
-        onError: onRequestError,
+        onError: handleErrorResponse,
       }),
     [data]
   );
@@ -136,13 +136,13 @@ const Home = () => {
         limit: PARAMS.PROMOTIONS_LIMIT,
       },
       onSuccess: res => {
-        onRequestSuccess({
+        handleSuccessResponse({
           ...data,
           ...res,
           promotions: [...data.promotions, ...res.promotions],
         });
       },
-      onError: onRequestError,
+      onError: handleErrorResponse,
     });
   }, [data]);
 
@@ -154,12 +154,12 @@ const Home = () => {
         limit: PARAMS.PROMOTIONS_LIMIT,
       },
       onSuccess: res =>
-        onRequestSuccess({
+        handleSuccessResponse({
           ...data,
           ...res,
           promotions: [...data.promotions, ...res.promotions],
         }),
-      onError: onRequestError,
+      onError: handleErrorResponse,
     });
   }, [data]);
 
@@ -171,7 +171,7 @@ const Home = () => {
     <>
       <DataTable
         data={data.promotions}
-        onEditItemAction={onEditItemAction}
+        onEditItemAction={startItemEditing}
         onDeleteItemAction={deleteItem}
         onDuplicateItemAction={duplicateItem}
         fetchMore={fetchData}
@@ -184,7 +184,7 @@ const Home = () => {
       {dataToEdit && (
         <EditDialog
           data={dataToEdit}
-          onClose={onCloseEditModal}
+          onClose={finishItemEditing}
           onSubmit={editItem}
         />
       )}

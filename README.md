@@ -17,13 +17,13 @@ Full-Stack Developer Test Assignment
 - Used TypeScript for client and server applications
 - Used Create React App starter kit for client application with MaterialUI components
 - Used Express and Mongoose for server application
-- Used Mongo and Mongo-Express images for MongoDB local deployment
+- Used [Mongo](https://hub.docker.com/_/mongo) and [Mongo-Express](https://hub.docker.com/_/mongo-express) Docker images for MongoDB local deployment
 - Configured ESlint and Prettier for linting and formatting code
 - Implemented data generation in worker thread. All the data generation and insertion in DB processes divided on chunks
 - Implemented infinite scroll with offset/limit pagination
 - Implemented Edit, Delete, Duplicate promotion items actions
 
-## How to run applications (in development mode)
+## How to run application (in development mode)
 
 1. Clone repository:
 
@@ -33,9 +33,9 @@ Full-Stack Developer Test Assignment
 
 `yarn`
 
-3. Pull Mongo and Mongo-Express Docker images
+3. Pull [Mongo](https://hub.docker.com/_/mongo) and [Mongo-Express](https://hub.docker.com/_/mongo-express) Docker images
 
-4. Run containers:
+4. Run Docker containers:
 
 `yarn server:start:db`
 
@@ -43,9 +43,16 @@ Full-Stack Developer Test Assignment
 
 `yarn server:start`
 
-5. Run client application:
+6. Run client application:
 
 `yarn client:start`
+
+## Application URLs (default)
+
+Client application: `http://localhost:3000`\
+Server application: `http://localhost:8000`\
+Database: `mongodb://localhost:27017/promotions`\
+Database admin interface (Mongo-Express): `http://localhost:8081`
 
 ## How to change promotions count
 
@@ -79,6 +86,6 @@ Update `PROMOTIONS_COUNT` constant in client app, default value is 10000
 
 Added to repository `.env` file with predefined values of required variables
 
-## Environment variables (server application)
+## Environment variables (client application)
 
 `REACT_APP_BASE_API` - API origin (predefined in `API_BASE` constant)

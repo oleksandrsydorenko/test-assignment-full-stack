@@ -1,5 +1,5 @@
 /* eslint-disable react/no-array-index-key */
-import React, { memo, useCallback, useEffect, useRef } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -27,13 +27,13 @@ interface IAction {
 
 interface IDataTableProps {
   data: IPromotion[];
-  onEditItemAction: (data: IPromotion) => void;
+  onEditItemAction: (dataItem: IPromotion) => void;
   onDeleteItemAction: IAction;
   onDuplicateItemAction: IAction;
   fetchMore: () => void;
 }
 
-const tableHeadCells = [
+const tableColumns = [
   '#',
   'Name',
   'Type',
@@ -63,7 +63,7 @@ const StyledTableRow = withStyles(theme => ({
 
 const useStyles = makeStyles({
   container: {
-    height: 'calc(100vh - 80px)',
+    height: 'calc(100vh - 40px)',
   },
 });
 
@@ -77,26 +77,29 @@ const DataTable = ({
   const classes = useStyles();
   const ref = useRef<HTMLDivElement>(null);
 
-  const onEditItemClick = useCallback(
-    ({ row, callback }) =>
+  const onEditMenuItemClick = useCallback(
+    ({ dataItem, callback }) =>
       (event: IEvent) => {
-        onEditItemAction(row);
+        onEditItemAction(dataItem);
         callback(event);
       },
-    []
-  );
-  const onDeleteItemClick = useCallback(
-    ({ row, callback }) =>
-      (event: IEvent) =>
-        onDeleteItemAction({ event, callback, id: row.id }),
     [data]
   );
-  const onDuplicateItemClick = useCallback(
-    ({ row, callback }) =>
+
+  const onDeleteMenuItemClick = useCallback(
+    ({ dataItem, callback }) =>
       (event: IEvent) =>
-        onDuplicateItemAction({ event, callback, id: row.id }),
+        onDeleteItemAction({ event, callback, id: dataItem.id }),
     [data]
   );
+
+  const onDuplicateMenuItemClick = useCallback(
+    ({ dataItem, callback }) =>
+      (event: IEvent) =>
+        onDuplicateItemAction({ event, callback, id: dataItem.id }),
+    [data]
+  );
+
   const onScroll = useCallback(
     (event: IEvent) => {
       const { offsetHeight, scrollHeight, scrollTop } = event.currentTarget;
@@ -109,11 +112,14 @@ const DataTable = ({
     [data]
   );
 
-  const menuItems = [
-    { name: 'Edit', onClick: onEditItemClick },
-    { name: 'Delete', onClick: onDeleteItemClick },
-    { name: 'Duplicate', onClick: onDuplicateItemClick },
-  ];
+  const menuItems = useMemo(
+    () => [
+      { name: 'Edit', onClick: onEditMenuItemClick },
+      { name: 'Delete', onClick: onDeleteMenuItemClick },
+      { name: 'Duplicate', onClick: onDuplicateMenuItemClick },
+    ],
+    [data]
+  );
 
   useEffect(() => {
     if (ref.current) {
@@ -132,7 +138,7 @@ const DataTable = ({
       <Table stickyHeader>
         <TableHead>
           <TableRow>
-            {tableHeadCells.map((item, i) => (
+            {tableColumns.map((item, i) => (
               <StyledTableCell key={i} align="center">
                 {item}
               </StyledTableCell>
@@ -140,25 +146,25 @@ const DataTable = ({
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((row, j) => {
+          {data.map((dataItem, j) => {
             const tableBodyCells = [
               j + 1,
-              row.name,
-              row.type,
-              formatDate(row.startDate),
-              formatDate(row.endDate),
-              row.userGroupName,
+              dataItem.name,
+              dataItem.type,
+              formatDate(dataItem.startDate),
+              formatDate(dataItem.endDate),
+              dataItem.userGroupName,
               <ActionsMenu
                 renderItems={onMenuClose =>
-                  menuItems.map((item, k) => (
+                  menuItems.map((menuItem, k) => (
                     <MenuItem
                       key={k}
-                      onClick={item.onClick({
-                        row,
+                      onClick={menuItem.onClick({
+                        dataItem,
                         callback: onMenuClose,
                       })}
                     >
-                      {item.name}
+                      {menuItem.name}
                     </MenuItem>
                   ))
                 }

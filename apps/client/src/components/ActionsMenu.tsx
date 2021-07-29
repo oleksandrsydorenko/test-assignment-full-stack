@@ -1,6 +1,6 @@
 import React from 'react';
 import Menu from '@material-ui/core/Menu';
-import MoreVertTwoTone from '@material-ui/icons/MoreVertTwoTone';
+import MoreIcon from '@material-ui/icons/MoreVertTwoTone';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { IEvent } from '../ts';
@@ -24,13 +24,8 @@ const ActionsMenu = ({ renderItems }: IActionsMenuProps) => {
 
   return (
     <div>
-      <MoreVertTwoTone className={classes.ActionsMenuButton} onClick={onOpen} />
-      <Menu
-        keepMounted
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={onClose}
-      >
+      <MoreIcon className={classes.ActionsMenuButton} onClick={onOpen} />
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={onClose}>
         {renderItems(onClose)}
       </Menu>
     </div>

@@ -61,10 +61,9 @@ const EditDialog = ({
   onSubmit,
 }: EditDialogProps) => {
   const classes = useStyles();
-
   const [name, setName] = useState(data.name);
-  const [startDate, setStartDate] = React.useState(data.startDate);
-  const [endDate, setEndDate] = React.useState(data.endDate);
+  const [startDate, setStartDate] = useState(data.startDate);
+  const [endDate, setEndDate] = useState(data.endDate);
   const [type, setType] = useState(
     prepareSelectValue<IPromotionType, PromotionTypes>(
       PROMOTION_TYPE,
@@ -111,7 +110,7 @@ const EditDialog = ({
           ? PROMOTION_USER_GROUP_NAME[userGroupName]
           : data.userGroupName,
       }),
-    [name, type, startDate, endDate, userGroupName]
+    [name, startDate, endDate, type, userGroupName]
   );
 
   return (
