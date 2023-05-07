@@ -1,6 +1,4 @@
-# Moon Active Promotions
-
-Full-Stack Developer Test Assignment
+# Test Assignment - Full-Stack Developer
 
 ## Screens
 
